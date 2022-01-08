@@ -1,0 +1,11 @@
+# requirement for running jupyter notebook in IntelliJ IDEA
+jupyter
+
+# used for encryption of data-files
+python-dotenv
+pyAesCrypt
+
+# requirements for export
+numpy
+pandas
+pymongo
