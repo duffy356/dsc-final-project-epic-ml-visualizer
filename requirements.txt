@@ -9,3 +9,12 @@ pyAesCrypt
 numpy
 pandas
 pymongo
+
+# streamlit & dashboard
+streamlit
+
+# ML Model
+transformers
+torch
+iso-639
+

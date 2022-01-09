@@ -6,6 +6,24 @@ The app is built with streamlit and deployed on Microsoft Azure (for the time of
 
 After the lecture the docker-file as well as the deployment will be deleted.
 
+## Run App locally
+
+### First step: download model
+
+Execute `download_models.sh` and download the pretrained model files from huggingface.
+
+This app uses the model from https://huggingface.co/papluca/xlm-roberta-base-language-detection
+
+### Second step: create venv
+
+Create a virutal env and install the dependencies from `requirements.txt` file
+
+### Start app
+
+Then open the folder streamlit `streamlit` and run the command `streamlit run main.py`
+
+or execute `docker-compose up` in root of this repo and start the container
+
 ## Which data is used?
 
 The project uses data that was collected for the master thesis 'identifying epic moments in video games'.
