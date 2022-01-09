@@ -47,7 +47,7 @@ class DataService:
 
         return obj
 
-    def read_prepared_df_file(self, player_name, df_file, index_col):
+    def read_prepared_df_file(self, player_name, df_file, index_col=None):
         destination_file, aes_file = self.get_file_path(player_name, df_file)
 
         if not os.path.exists(destination_file):
@@ -72,6 +72,10 @@ class DataService:
     def get_df_match_history_of_player(self, player_name):
         match_summaries = self.read_prepared_file(player_name, "match_summaries")
         return pd.DataFrame(match_summaries)
+
+    def get_df_summoners_of_player(self, player_name):
+        summoner_mappings = self.read_prepared_df_file(player_name, "summoner_mapping")
+        return pd.DataFrame(summoner_mappings)
 
     def get_match_summary_array(self, player_name, match_id):
         filename = f"match_participant_summaries_{match_id}"
