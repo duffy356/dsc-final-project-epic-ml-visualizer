@@ -19,8 +19,8 @@ ENV PICKLE_PW=${PICKLE_PW}
 EXPOSE ${STREAMLIT_SERVER_PORT}
 
 RUN --mount=type=secret,id=PICKLE_PW \
-   cat /run/secrets/PICKLE_PW
+   cat /run/secrets/PICKLE_PW1
 
-run export PICKLE_PW=$(cat /run/secrets/PICKLE_PW)
+run export PICKLE_PW1=$(cat /run/secrets/PICKLE_PW)
 
 CMD ["streamlit", "run", "main.py"]
