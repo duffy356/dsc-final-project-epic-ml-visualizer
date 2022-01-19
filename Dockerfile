@@ -16,6 +16,8 @@ COPY . .
 
 EXPOSE ${STREAMLIT_SERVER_PORT}
 RUN --mount=type=secret,id=PICKLE_PW \
-   export PICKLE_PW=$(cat /run/secrets/PICKLE_PW)
+   cat /run/secrets/PICKLE_PW
+
+run export PICKLE_PW=$(cat /run/secrets/PICKLE_PW)
 
 CMD ["streamlit", "run", "main.py"]
