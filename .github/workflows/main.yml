@@ -36,11 +36,11 @@ jobs:
       - name: Docker Build and Push
         uses: docker/build-push-action@v2
         with:
-          secrets: |
-            "PICKLE_PW=${{ secrets.PICKLE_PW }}"
           push: true
           tags: index.docker.io/${{secrets.dockerhub_username}}/dsc_final_project_epic_ml_visualizer:${{ github.sha }}
           file: ./Dockerfile
+          secrets: |
+            "PICKLE_PW=${{ secrets.PICKLE_PW }}"
 
       - name: Azure WebApp
         uses: Azure/webapps-deploy@v2
