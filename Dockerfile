@@ -15,6 +15,5 @@ RUN pip install -r requirements.txt
 COPY . .
 
 EXPOSE ${STREAMLIT_SERVER_PORT}
-EXPOSE ${PICKLE_PW}
 
 CMD ["streamlit", "run", "main.py"]
