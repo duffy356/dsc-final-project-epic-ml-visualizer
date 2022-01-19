@@ -24,6 +24,11 @@ Then open the folder streamlit `streamlit` and run the command `streamlit run ma
 
 or execute `docker-compose up` in root of this repo and start the container
 
+If you want to let the app run locally with Docker, just start the docker-compose with a "fresh" (=cached) build;
+to do so run the following command in the root of this project:
+
+    docker-compose up --build
+
 ## Which data is used?
 
 The project uses data that was collected for the master thesis 'identifying epic moments in video games'.

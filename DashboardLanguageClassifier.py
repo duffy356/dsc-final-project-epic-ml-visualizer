@@ -11,7 +11,7 @@ class DashboardLanguageClassifier:
         self.language_detector: LanguageDetector = language_detector
 
     def refresh(self):
-        st.title("Language Classification Dashboard")
+        st.title("Language Classification Application UI")
 
         user_input = st.text_area("Enter a text that should be checked", "This is an example text.")
 

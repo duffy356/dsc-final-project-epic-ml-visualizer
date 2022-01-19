@@ -1,0 +1,51 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build and Deploy
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build-and-deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Docker Login
+        uses: docker/login-action@v1.10.0
+        with:
+          # Username used to log against the Docker registry
+          username:  ${{ secrets.dockerhub_username}}
+          # Password or personal access token used to log against the Docker registry
+          password:  ${{ secrets.dockerhub_password }}
+          # Log out from the Docker registry at the end of a job
+          logout: true
+
+      - name: Docker Build and Push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: index.docker.io/${{username}}/dsc_final_project_epic_ml_visualizer:${{ github.sha }}
+          file: ./Dockerfile
+
+      - name: Azure WebApp
+        uses: Azure/webapps-deploy@v2
+        with:
+          # Name of the Azure Web App
+          app-name: ds20m005-style-streamlit
+          # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
+          publish-profile: ${{ secrets.publish_profile }}
+          # Applies to Web App Containers only: Specify the fully qualified container image(s) name. For example, 'myregistry.azurecr.io/nginx:latest' or 'python:3.7.2-alpine/'. For multi-container scenario multiple container image names can be provided (multi-line separated)
+          images: index.docker.io/${{username}}/dsc_final_project_epic_ml_visualizer:${{ github.sha }}

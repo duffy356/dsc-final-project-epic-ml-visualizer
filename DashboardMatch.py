@@ -42,10 +42,16 @@ class DashboardMatch:
             st.dataframe(data=chat_of_match)
 
             timecategory_counts = chat_of_match['timecategory'].value_counts()
-            before_cnt = timecategory_counts['BEFORE_MATCH']
-            during_cnt = timecategory_counts['DURING_MATCH']
-            after_cnt = timecategory_counts['AFTER_MATCH']
-            st.caption(f"{len(chat_of_match)} Messages have been capture. {before_cnt} before, {during_cnt} during, {after_cnt} after the match")
+            before_cnt = 0
+            during_cnt = 0
+            after_cnt = 0
+            if 'BEFORE_MATCH' in timecategory_counts.index:
+                before_cnt = timecategory_counts['BEFORE_MATCH']
+            if 'DURING_MATCH' in timecategory_counts.index:
+                during_cnt = timecategory_counts['DURING_MATCH']
+            if 'AFTER_MATCH' in timecategory_counts.index:
+                after_cnt = timecategory_counts['AFTER_MATCH']
+            st.caption(f"{len(chat_of_match)} Messages have been captured. {before_cnt} before, {during_cnt} during, {after_cnt} after the match")
         else:
             st.markdown("""
                 **No chat was collected for the selected match** 
