@@ -14,7 +14,10 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+ENV PICKLE_PW=${PICKLE_PW}
+
 EXPOSE ${STREAMLIT_SERVER_PORT}
+
 RUN --mount=type=secret,id=PICKLE_PW \
    cat /run/secrets/PICKLE_PW
 

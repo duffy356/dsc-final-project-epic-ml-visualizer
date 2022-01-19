@@ -38,9 +38,9 @@ jobs:
         with:
           push: true
           tags: index.docker.io/${{secrets.dockerhub_username}}/dsc_final_project_epic_ml_visualizer:${{ github.sha }}
-          file: ./Dockerfile
           secrets: |
             "PICKLE_PW=${{ secrets.PICKLE_PW }}"
+          file: ./Dockerfile
 
       - name: Azure WebApp
         uses: Azure/webapps-deploy@v2
