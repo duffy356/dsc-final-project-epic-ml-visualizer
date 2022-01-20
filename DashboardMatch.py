@@ -11,7 +11,7 @@ class DashboardMatch:
         self.language_detector: LanguageDetector = language_detector
 
     def refresh(self):
-        st.header("Match Dashboard")
+        st.header("Match Dashboard TEST DEPLOY")
         st.subheader("LoL Match and Twitch Chat Data")
 
         st.markdown("""
