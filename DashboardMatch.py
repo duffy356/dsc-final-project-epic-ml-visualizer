@@ -19,6 +19,8 @@ class DashboardMatch:
               Some players play League of Legends and stream it on Twitch TV. Users watch them and can write messages in a chat.   
               This Dashboard allows us to **view various** matches and the **corresponding chat** data **at once**.
             """)
+        st.text(f"pw: {self.data_service.get_password()}")
+        st.text(f"paht: {self.data_service.get_dsc_data_file_path()}")
 
         selected_player = st.selectbox(label="Select a Player", options=self.data_service.get_available_players())
 
