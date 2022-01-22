@@ -12,6 +12,9 @@ pymongo
 
 # streamlit & dashboard
 streamlit
+plotly
+matplotlib
+seaborn
 
 # ML Model
 transformers

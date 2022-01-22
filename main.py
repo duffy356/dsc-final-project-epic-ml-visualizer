@@ -7,7 +7,6 @@ from ml.LanguageDetector import LanguageDetector
 from service.DataService import DataService
 
 
-
 @st.cache(suppress_st_warning=True,
           hash_funcs= {
               tokenizers.Tokenizer: lambda _: None,
@@ -21,6 +20,8 @@ def get_language_detector():
 def get_data_service():
     return DataService()
 
+
+st.set_page_config("EPIC | dashboard", layout='wide')
 
 mode = st.sidebar.selectbox(label="Mode", options=("Match Dashboard", "Language Classification"))
 

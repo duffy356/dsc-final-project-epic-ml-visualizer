@@ -1,5 +1,6 @@
 import os
 import pickle
+from datetime import timedelta
 from pathlib import Path
 import dotenv
 import pandas as pd
@@ -60,7 +61,7 @@ class DataService:
 
         return df
 
-    def get_available_players(self):
+    def get_available_streamers(self):
         dsc_path = self.get_dsc_data_file_path()
         players = []
         for d in os.listdir(dsc_path):
@@ -69,11 +70,23 @@ class DataService:
                 players.append(d)
         return players
 
-    def get_df_match_history_of_player(self, player_name):
-        match_summaries = self.read_prepared_file(player_name, "match_summaries")
-        return pd.DataFrame(match_summaries)
+    def add_duration(self, item):
+        start = item['start_date']
+        duration = item['gameDuration_ms']
+        if duration < 10000:
+            return start + timedelta(seconds=duration)
+        else:
+            return start + timedelta(milliseconds=duration)
 
-    def get_df_summoners_of_player(self, player_name):
+    def get_df_match_history_of_streamer(self, player_name):
+        match_summaries = self.read_prepared_file(player_name, "match_summaries")
+        df = pd.DataFrame(match_summaries)
+        df.rename(columns={"gameStartTimestamp_date": "start_date"}, inplace=True)
+        df['end_date'] = df[['start_date', 'gameDuration_ms']].apply(self.add_duration, axis=1)
+        df['matchSelectbox'] = (df.index + 1).astype(str) + " | " + df['matchId'] + " (" + df['start_date'].dt.round('1s').astype(str) + " to " + df['end_date'].dt.round('1s').dt.time.astype(str) +")"
+        return df
+
+    def get_df_summoners_of_streamer(self, player_name):
         summoner_mappings = self.read_prepared_df_file(player_name, "summoner_mapping")
         return pd.DataFrame(summoner_mappings)
 
@@ -81,6 +94,12 @@ class DataService:
         filename = f"match_participant_summaries_{match_id}"
         return self.read_prepared_file(player_name, filename)
 
-    def get_chat_of_match(self, player_name, match_id):
-        chat_df = self.read_prepared_df_file(player_name, 'chat_df', 'datetime')
+    def get_match_timeline_dict(self, player_name, match_id):
+        filename = f"match_timeline_{match_id}"
+        return self.read_prepared_file(player_name, filename)
+
+    def get_chat_of_match_df(self, player_name, match_id):
+        chat_df = self.read_prepared_df_file(player_name, 'chat_df', None)
+        datetime_index = pd.DatetimeIndex(chat_df['datetime'])
+        chat_df.set_index(datetime_index, inplace=True)
         return chat_df[chat_df['matchId'] == match_id]
