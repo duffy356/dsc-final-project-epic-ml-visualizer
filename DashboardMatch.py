@@ -265,9 +265,6 @@ class DashboardMatch:
         aligned_datetime_index = pd.date_range(timeline_summoner.index.min(), timeline_summoner.index.max(), freq='1S').round('S')
         self.messages_per_sec_df = self.messages_per_sec_df.reindex(index=aligned_datetime_index)
         self.messages_per_sec_df['count_messages'] = self.messages_per_sec_df['count_messages'].fillna(0)
-        self.messages_per_sec_df['timecategory'] = self.messages_per_sec_df['timecategory'].ffill()
-        self.messages_per_sec_df['timecategory'] = self.messages_per_sec_df['timecategory'].bfill()
-
         if len(self.selected_summoner_event_types) > 0:
             event_filter = timeline_summoner["event_types"].isin(self.selected_summoner_event_types)
             self.timeline_summoner_filtered = timeline_summoner[event_filter]
@@ -281,13 +278,11 @@ class DashboardMatch:
         events_unique = self.timeline_summoner_filtered['event_types'].unique()
         events_unique = np.sort(events_unique)[::-1] # reverse
 
-        # plot histogram at bottom
-        baraxes = self.messages_per_sec_df.plot.bar(ax = ax[1], xticks=[], log=True, legend=False)
-
+        # plot chat histogram at bottom
+        plotting_series = self.messages_per_sec_df['count_messages']
         before_cnt, during_cnt, after_cnt = self.chat_transformer_util.get_timecategory_counts(self.messages_per_sec_df)
         colors = np.repeat(['#0DA9FF', '#0000FF', '#0DA9FF'], [before_cnt, during_cnt, after_cnt])
-        for i, color in enumerate(colors):
-            baraxes.containers[0].patches[i].set_color(color)
+        plotting_series.plot.bar(ax=ax[1], xticks=[], log=True, legend=False, **{'color':colors})
 
         # set X axis labels
         x_ticks = [self.messages_per_sec_df.index.get_loc(summoner_idx) for summoner_idx in self.timeline_summoner_filtered.index]
@@ -362,7 +357,14 @@ class DashboardMatch:
 
         filtered_chat = self.chat_of_match[start_idx:end_idx]
         mask = (filtered_chat['chatbot'] == False) & (filtered_chat['personal_msg'] == False) & (filtered_chat['command'] == False)
-        st.dataframe(data=filtered_chat[mask][['author_name', 'text']])
+        col1, col2 = st.columns([1, 2])
+        col1.dataframe(data=filtered_chat[mask][['author_name', 'text']])
 
+        with col2.container():
+            import streamlit.components.v1 as components
+            entered = st.text_input("enter an emote", value="")
+            if len(entered) > 0:
+                # embed streamlit docs in a streamlit app
+                components.iframe(f"https://www.slanglang.net/emotes/{entered}/", height=600, scrolling=True)
 
 

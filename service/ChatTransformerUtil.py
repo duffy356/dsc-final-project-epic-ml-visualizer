@@ -13,10 +13,12 @@ class ChatTransformerUtil:
         print(df_session_chat_messages.index.min())
         messages_per_sec = df_session_chat_messages.loc[(mask)].resample(sample_rate).size()
         timecategories_df = df_session_chat_messages['timecategory'].loc[~df_session_chat_messages.index.duplicated(keep = 'first')]
+        timecategories_df.index = timecategories_df.index.ceil('S')
         messages_per_sec = messages_per_sec.to_frame().join(timecategories_df)
         messages_per_sec.columns = ['count_messages', 'timecategory']
         messages_per_sec['timecategory'] = messages_per_sec['timecategory'].fillna(method="ffill")
-        return messages_per_sec
+        messages_per_sec['timecategory'] = messages_per_sec['timecategory'].fillna(method="bfill")
+        return messages_per_sec[~messages_per_sec.index.duplicated(keep = 'first')]
 
     @staticmethod
     def get_timecategory_counts(chat_df):
